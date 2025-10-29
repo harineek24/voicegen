@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}{{ form_config.name }} - Live Voice Interface{% endblock %}
 
@@ -144,16 +145,17 @@
     </div>
 </div>
 
+{{ form_config.fields|json_script:"form-fields-json" }}
 <script>
     const sessionId = "{{ session.session_id }}";
     const wsScheme = "{{ ws_scheme }}";
     const wsHost = "{{ host }}";
-    const finalizeUrl = `/s/${sessionId}/finalize/`;
-    const formFields = JSON.parse(`{{ form_config.fields|safe|escapejs }}`);
+    window.finalizeUrl = `/s/${sessionId}/finalize/`;
+    window.formFields = JSON.parse(document.getElementById('form-fields-json').textContent);
 </script>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="/static/voice_flow/js/live-audio-interface.js"></script>
+<script src="{% static 'voice_flow/js/live-audio-interface.js' %}"></script>
 {% endblock %}
 
